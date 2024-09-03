@@ -5,10 +5,13 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    public static event Action LeftMouse_Clicked;
-
     private void Update()
     {
+        if (Input.anyKey)
+        {
+            //This read only function for idle animaiton on bubbles.
+            Debug.Log("Any Key press check");
+        }
         if (Input.GetKeyDown(KeyCode.P))
         {
             GameManager.IGameManager.GamePaused();
@@ -17,7 +20,7 @@ public class InputManager : MonoBehaviour
         if(Input.GetMouseButton(0))
         {
             //LeftMouse_Clicked?.Invoke();
-            Debug.Log("Input Manager: Left Mouse clicked");
+            //Debug.Log("Input Manager: Left Mouse clicked");
         }
     }
 }

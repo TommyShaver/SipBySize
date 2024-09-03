@@ -5,27 +5,48 @@ using UnityEngine;
 
 public class SwitchEnveroriments : MonoBehaviour
 {
-    public Transform enverorimentsGameObjects;
+   public static SwitchEnveroriments IDrinkStation { get; set; }
+   public Transform[] enverorimentsGameObjects;
 
     private float sendItemsToThisSpot;
-    private Vector3 grabTransform;
+    private Vector3[] grabTransform = new Vector3[16];
 
     [SerializeField] float timeToDestinationFadeOut;
     [SerializeField] float timeToDestinationFadeIn;
+    [SerializeField] float timeToNextAnimation;
 
     [SerializeField] Ease fadeInEase;
     [SerializeField] Ease fadeOutEase;
 
+    private void Awake()
+    {
+        if (IDrinkStation != null && IDrinkStation != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            IDrinkStation = this;
+        }
+    }
+
     public void Start()
     {
-        grabTransform = enverorimentsGameObjects.transform.position;
+        for (int i = 0; i < enverorimentsGameObjects.Length; i++)
+        {
+            grabTransform[i] = enverorimentsGameObjects[i].transform.position;
+        }
+        SetUp();
     }
 
 
     public void OnFadeInRequest()
     {
         gameObject.SetActive(true);
-        enverorimentsGameObjects.DOMoveX(0, timeToDestinationFadeIn).SetEase(fadeInEase);
+        for (int i = 0; i < enverorimentsGameObjects.Length; i++)
+        {
+            enverorimentsGameObjects[i].DOMoveX(grabTransform[i].x, timeToDestinationFadeIn).SetEase(fadeInEase);
+        }
     }
 
     public void OnFadeOutRequest()
@@ -34,12 +55,28 @@ public class SwitchEnveroriments : MonoBehaviour
         StartCoroutine(BegainAnimamtion());
     }
 
-
     private IEnumerator BegainAnimamtion()
     {
-        enverorimentsGameObjects.DOMoveX(sendItemsToThisSpot, timeToDestinationFadeOut).SetEase(fadeOutEase);
+        for (int i = 0; i < enverorimentsGameObjects.Length; i++)
+        {
+            enverorimentsGameObjects[i].DOMoveX(sendItemsToThisSpot, timeToDestinationFadeOut).SetEase(fadeOutEase);
+            yield return new WaitForSeconds(timeToNextAnimation);
+        }
         yield return new WaitForSeconds(.5f);
-        enverorimentsGameObjects.DOMoveX(20f, 0, true);
+        for (int i = 0; i < enverorimentsGameObjects.Length; i++)
+        {
+            enverorimentsGameObjects[i].DOMoveX(20f, 0, true);
+        }
+        gameObject.SetActive(false);
+    }
+
+    //Once the game starts set this up
+    private void SetUp()
+    {
+        for (int i = 0; i < enverorimentsGameObjects.Length; i++)
+        {
+            enverorimentsGameObjects[i].DOMoveX(20f, 0, true);
+        }
         gameObject.SetActive(false);
     }
 }

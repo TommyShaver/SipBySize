@@ -5,6 +5,7 @@ using DG.Tweening;
 
 public class CashRegisterSceneAnimation : MonoBehaviour
 {
+    public static CashRegisterSceneAnimation ICashRegisterScene { get; set; }
     public Transform[] enverorimentsGameObjects;
     
 
@@ -19,15 +20,17 @@ public class CashRegisterSceneAnimation : MonoBehaviour
     [SerializeField] Ease fadeOutEase;
 
 
-    private void OnEnable()
+    private void Awake()
     {
-        //GameManager.OutBoundEvent1 += OnFadeInRequest;
+        if (ICashRegisterScene != null && ICashRegisterScene != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            ICashRegisterScene = this;
+        }
     }
-    private void OnDisable()
-    {
-        //GameManager.OutBoundEvent1 -= OnFadeInRequest;
-    }
-
 
     public void Start()
     {

@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
+//I will need a still mode for when i fade over to gameobject in the front talking to each other.
+//Please Switch these to an Enum
+
 public class BubblesAnimationController : MonoBehaviour
 {
     public static BubblesAnimationController Instace_BubblesAnimationController { get; set; }
@@ -16,6 +21,7 @@ public class BubblesAnimationController : MonoBehaviour
     private const string BUBBLES_SHOCKED = "Bubbles_Shocked";
 
     //Bubbles Face Animation
+    private const string BUBBLES_FACE_ANGRY = "Bubbles_Face_Angry";
     private const string BUBBLES_FACE_IDLE = "Bubbles_Face_Idle";
     private const string BUBBLES_FACE_SMILE = "Bubbles_Face_Smile";
     private const string BUBBLES_FACE_BLINKING = "Bubbles_Face_Blinking";
@@ -128,8 +134,35 @@ public class BubblesAnimationController : MonoBehaviour
                     currentAnimationFace = faceAnimation;
                     nameOfAnimationFace = BUBBLES_FACE_IDLE;
                     break;
+                case 8:
+                    bubblesFace.Play(BUBBLES_FACE_ANGRY);
+                    currentAnimationFace = faceAnimation;
+                    nameOfAnimationFace = BUBBLES_FACE_ANGRY;
+                    break;
             }
             Debug.Log("Bubbles Animation Controller: <color=Green>Bubbles body animation played</color> " + nameOfAnimationFace);
         }
+    }
+
+    public void BubblesIdleAnimation(bool AKFActive)
+    {
+        if(AKFActive)
+        {
+
+        }
+    }
+    public void BubblesTalking(int body, int face)
+    {
+        BubblesBody(body);
+        BubblesFace(face);
+        Debug.Log("Bubbles Animation Controller: <color=Yellow>Bubbles body animation played</color> " + "Talking animtion");
+    }
+
+    private IEnumerator AFKLogic()
+    {
+        //random gen for blinking anim
+        //after a couple of seconds play yawn animation
+        // return back to idle state 
+        yield return new WaitForSeconds(1);
     }
 }

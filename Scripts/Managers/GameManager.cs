@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//I need state machine to check what state we are in. 
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager IGameManager { get; set; }
@@ -13,6 +16,7 @@ public class GameManager : MonoBehaviour
 
     private bool gameIsPaused;
     private bool canBePaused = true;
+
     //Starting Logic
     private void Awake()
     {
@@ -27,7 +31,7 @@ public class GameManager : MonoBehaviour
     }
     
 
-    //Pause Scene-----------------------------------------------------------
+    //Pause Scene UI Scene ------------------------------------------------------
     public void GamePaused()
     {
         if(canBePaused)
@@ -53,7 +57,6 @@ public class GameManager : MonoBehaviour
         } 
     }
 
-    //Go Back to make screen ----------------------------------------------
     public void MainMenuSelected()
     {
         gameIsPaused = false;
@@ -69,23 +72,19 @@ public class GameManager : MonoBehaviour
     //Which State we are in
 
 
-    //Call methods 
+    //Call methods ----------------------------------------------------------
     public void OpeningOfGame()
     {
         cameras[0].SetActive(true);
         //...Turn this back on in unity editor
-        OnFadeInOutUIElement?.Invoke();
+        //OnFadeInOutUIElement?.Invoke();
         cameras[0].SetActive(false);
         cameras[1].SetActive(true);
         StartCoroutine(OpeningCutScene(5));
     }
 
-    public void SceneSwitch()
-    {
-        StartCoroutine(GameModeSwitchTimer());
-    }
 
-    //Timed evetns Logic
+    //Timed evetns Logic -----------------------------------------------------
     private IEnumerator OpeningCutScene(int timer)
     {
         int i = 0;
@@ -108,12 +107,6 @@ public class GameManager : MonoBehaviour
             i++;
             yield return new WaitForSeconds(1);
         }
-    }
-
-    private IEnumerator GameModeSwitchTimer()
-    {
-        //OutBoundEvent1?.Invoke();
-        yield return new WaitForSeconds(1);
     }
 
 }
