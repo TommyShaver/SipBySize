@@ -13,12 +13,15 @@ public class BubblesAnimationController : MonoBehaviour
     public Animator bubblesBody;
     public Animator bubblesFace;
 
+    public SpriteRenderer spriteRendererBody;
+
     //Bubbles Body Animation
     private const string BUBBLES_IDLE = "Bubbles_Idle";
     private const string BUBBLES_WAVE = "Bubbles_Wave";
     private const string BUBBLES_PUMP = "Bubbles_Pump";
     private const string BUBBLES_EXCITED = "Bubbles_Excited";
     private const string BUBBLES_SHOCKED = "Bubbles_Shocked";
+    private const string BUBBLES_JUMP = "Bubbles_Jump";
 
     //Bubbles Face Animation
     private const string BUBBLES_FACE_ANGRY = "Bubbles_Face_Angry";
@@ -29,12 +32,18 @@ public class BubblesAnimationController : MonoBehaviour
     private const string BUBBLES_FACE_CRY = "Bubbles_Face_Cry";
     private const string BUBBLES_FACE_EXICTED = "Bubbles_Face_Exicted";
     private const string BUBBLES_FACE_YAWN = "Bubbles_Face_Yawn";
+    private const string BUBBLES_FACE_JUMP = "Bubbles_Face_Jump";
 
     private int currentAnimationBody;
     private int currentAnimationFace;
     private string nameOfAnimationBody;
     private string nameOfAnimationFace;
 
+    private bool xFlipped = true;
+    private bool startBlinkin;
+    private float timeRemaining;
+
+    //Setup ----------------------------------------------------------------------------
     private void Awake()
     {
         if (Instace_BubblesAnimationController != null && Instace_BubblesAnimationController != this)
@@ -51,13 +60,28 @@ public class BubblesAnimationController : MonoBehaviour
         bubblesBody.Play(BUBBLES_IDLE);
         bubblesFace.Play(BUBBLES_FACE_IDLE);
     }
+    private void Update()
+    {
+        if (startBlinkin)
+        {
+            if (timeRemaining > 0)
+            {
+                timeRemaining -= Time.deltaTime;
+            }
+            else
+            {
+                BubblesIdleAnimation();
+                BubblesFace(1);
+            }
+        }
+    }
 
     //Bubbles body -------------------------------------------------------------------
     //Set animation not related to in game events.
     public void BubblesBody(int animation)
     {
         //I am sure there a better way to write this but seemed good at the time. -_-
-        if(currentAnimationBody != animation)
+        if (currentAnimationBody != animation)
         {
             switch (animation)
             {
@@ -86,8 +110,30 @@ public class BubblesAnimationController : MonoBehaviour
                     currentAnimationBody = animation;
                     nameOfAnimationBody = BUBBLES_SHOCKED;
                     break;
+                case 6:
+                    bubblesBody.Play(BUBBLES_JUMP);
+                    currentAnimationBody = animation;
+                    nameOfAnimationBody = BUBBLES_JUMP;
+                    FlipBubbles();
+                    break;
             }
             Debug.Log("Bubbles Animation Controller: <color=Yellow>Bubbles body animation played</color> " + nameOfAnimationBody);
+        }
+    }
+
+    public void FlipBubbles()
+    {
+        if (xFlipped)
+        {
+            spriteRendererBody.flipX = true;
+            Debug.Log("Bubbles Animation Controller: FlipX fasle");
+            xFlipped = false;
+        }
+        else
+        {
+            spriteRendererBody.flipX = false;
+            Debug.Log("Bubbles Animation Controller: FlipX true");
+            xFlipped = true;
         }
     }
 
@@ -103,54 +149,62 @@ public class BubblesAnimationController : MonoBehaviour
                     bubblesFace.Play(BUBBLES_FACE_BLINKING);
                     currentAnimationFace = faceAnimation;
                     nameOfAnimationFace = BUBBLES_FACE_BLINKING;
+                    startBlinkin = false;
                     break;
                 case 2:
                     bubblesFace.Play(BUBBLES_FACE_CRY);
                     currentAnimationFace = faceAnimation;
                     nameOfAnimationFace = BUBBLES_FACE_CRY;
+                    startBlinkin = false;
                     break;
                 case 3:
                     bubblesFace.Play(BUBBLES_FACE_SMILE);
                     currentAnimationFace = faceAnimation;
                     nameOfAnimationFace = BUBBLES_FACE_SMILE;
+                    startBlinkin = false;
                     break;
                 case 4:
                     bubblesFace.Play(BUBBLES_FACE_TALKINGANIM);
                     currentAnimationFace = faceAnimation;
                     nameOfAnimationFace = BUBBLES_FACE_TALKINGANIM;
+                    startBlinkin = false;
                     break;
                 case 5:
                     bubblesFace.Play(BUBBLES_FACE_YAWN);
                     currentAnimationFace = faceAnimation;
                     nameOfAnimationFace = BUBBLES_FACE_YAWN;
+                    startBlinkin = false;
                     break;
                 case 6:
                     bubblesFace.Play(BUBBLES_FACE_EXICTED);
                     currentAnimationFace = faceAnimation;
                     nameOfAnimationFace = BUBBLES_FACE_EXICTED;
+                    startBlinkin = false;
                     break;
                 case 7:
                     bubblesFace.Play(BUBBLES_FACE_IDLE);
                     currentAnimationFace = faceAnimation;
                     nameOfAnimationFace = BUBBLES_FACE_IDLE;
+                    startBlinkin = true;
                     break;
                 case 8:
                     bubblesFace.Play(BUBBLES_FACE_ANGRY);
                     currentAnimationFace = faceAnimation;
                     nameOfAnimationFace = BUBBLES_FACE_ANGRY;
+                    startBlinkin = false;
+                    break;
+                case 9:
+                    bubblesFace.Play(BUBBLES_FACE_JUMP);
+                    currentAnimationFace = faceAnimation;
+                    nameOfAnimationFace = BUBBLES_FACE_JUMP;
+                    startBlinkin = false;
                     break;
             }
             Debug.Log("Bubbles Animation Controller: <color=Green>Bubbles body animation played</color> " + nameOfAnimationFace);
         }
     }
 
-    public void BubblesIdleAnimation(bool AKFActive)
-    {
-        if(AKFActive)
-        {
 
-        }
-    }
     public void BubblesTalking(int body, int face)
     {
         BubblesBody(body);
@@ -158,11 +212,16 @@ public class BubblesAnimationController : MonoBehaviour
         Debug.Log("Bubbles Animation Controller: <color=Yellow>Bubbles body animation played</color> " + "Talking animtion");
     }
 
-    private IEnumerator AFKLogic()
+    //BUBBLES AFK -----------------------------------------------------------------------------------------------------------
+    public void BubblesIdleAnimation()
     {
-        //random gen for blinking anim
-        //after a couple of seconds play yawn animation
-        // return back to idle state 
+        timeRemaining = Random.Range(5, 10);
+        Debug.Log("Bubbles Animation Controller: Blink function called");
+        StartCoroutine(WaitForAniamtion());
+    }
+    private IEnumerator WaitForAniamtion()
+    {
         yield return new WaitForSeconds(1);
+        BubblesFace(7);
     }
 }
