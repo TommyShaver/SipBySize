@@ -51,7 +51,7 @@ public class SwitchEnveroriments : MonoBehaviour
 
     public void OnFadeOutRequest()
     {
-        sendItemsToThisSpot = -20f;
+        sendItemsToThisSpot = -100f;
         StartCoroutine(BegainAnimamtion());
     }
 

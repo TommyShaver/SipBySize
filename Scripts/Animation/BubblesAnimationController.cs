@@ -117,7 +117,7 @@ public class BubblesAnimationController : MonoBehaviour
                     FlipBubbles();
                     break;
             }
-            Debug.Log("Bubbles Animation Controller: <color=Yellow>Bubbles body animation played</color> " + nameOfAnimationBody);
+            Debug.Log("[Bubbles Animation Controller] <color=Yellow>Bubbles body animation played</color> " + nameOfAnimationBody);
         }
     }
 
@@ -200,23 +200,23 @@ public class BubblesAnimationController : MonoBehaviour
                     startBlinkin = false;
                     break;
             }
-            Debug.Log("Bubbles Animation Controller: <color=Green>Bubbles body animation played</color> " + nameOfAnimationFace);
+            Debug.Log("[Bubbles Animation Controller] <color=Green>Bubbles body animation played</color> " + nameOfAnimationFace);
         }
     }
 
-
+    //In game animation events -------------------------------------------------------------------------------------------------
     public void BubblesTalking(int body, int face)
     {
         BubblesBody(body);
         BubblesFace(face);
-        Debug.Log("Bubbles Animation Controller: <color=Yellow>Bubbles body animation played</color> " + "Talking animtion");
+        Debug.Log("[Bubbles Animation Controller] <color=Yellow>Bubbles body animation played</color> " + "Talking animtion");
     }
 
     //BUBBLES AFK -----------------------------------------------------------------------------------------------------------
     public void BubblesIdleAnimation()
     {
         timeRemaining = Random.Range(5, 10);
-        Debug.Log("Bubbles Animation Controller: Blink function called");
+        Debug.Log("[Bubbles Animation Controller] Blink function called");
         StartCoroutine(WaitForAniamtion());
     }
     private IEnumerator WaitForAniamtion()

@@ -10,12 +10,12 @@ public class InputManager : MonoBehaviour
         if (Input.anyKey)
         {
             //This read only function for idle animaiton on bubbles.
-            Debug.Log("Any Key press check");
+            //Debug.Log("Any Key press check");
         }
         if (Input.GetKeyDown(KeyCode.P))
         {
             GameManager.IGameManager.GamePaused();
-            Debug.Log("Input Manager: P Key has been pressed");
+            Debug.Log("[Input Manager] P Key has been pressed");
         }
         if(Input.GetMouseButton(0))
         {

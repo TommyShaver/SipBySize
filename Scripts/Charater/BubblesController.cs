@@ -2,8 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
+
 public class BubblesController : MonoBehaviour
 {
+    public static BubblesController IbubblesController { get; set; }
     [SerializeField] float fallSpeed;
     [SerializeField] float jumpDuration;
     private Vector3 startingPostion;
@@ -12,14 +15,26 @@ public class BubblesController : MonoBehaviour
     private bool backToStart;
 
     //Setup --------------------------------------------------------------------
+    private void Awake()
+    {
+        if (IbubblesController != null && IbubblesController != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            IbubblesController = this;
+        }
+    }
     private void Start()
     {
         startingPostion = transform.position;
     }
 
     //Jump Logic ----------------------------------------------------------------
-    public void JumpTest()
+    public void BubblesJump()
     {
+        //This function is a static jump between to postion
         JumpLogic();
     }
 

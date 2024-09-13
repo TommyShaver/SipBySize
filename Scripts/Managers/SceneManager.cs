@@ -25,6 +25,7 @@ public class SceneManager : MonoBehaviour
         openingSceneLoaded = true;    
     }
 
+    //These function make the start coroutine easier =======================
     //Drink Station Calls --------------------------------------------------
     private void DrinkStationFadeIn()
     {
@@ -46,7 +47,10 @@ public class SceneManager : MonoBehaviour
         CashRegisterSceneAnimation.ICashRegisterScene.OnFadeOutRequest();
     }
 
+
+    
     //Logic to switch scenes ----------------------------------------------
+    //This gets called from the game manager 
     public void SwithcScenes()
     {
         if(openingSceneLoaded)

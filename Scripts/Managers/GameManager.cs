@@ -13,7 +13,9 @@ public class GameManager : MonoBehaviour
     public static event Action OnPauseMenuElement;
 
     public GameObject[] cameras;
-
+    public GameObject bubblesStatic;
+    public GameObject dialogBox;
+ 
     private bool gameIsPaused;
     private bool canBePaused = true;
 
@@ -28,6 +30,8 @@ public class GameManager : MonoBehaviour
         {
             IGameManager = this;
         }
+        bubblesStatic.SetActive(false);
+        dialogBox.SetActive(false);
     }
     
 
@@ -66,21 +70,37 @@ public class GameManager : MonoBehaviour
         OnFadeInOutUIElement?.Invoke();
         OnPauseMenuElement?.Invoke();
         canBePaused = false;
-        Debug.Log("Game Manager: Main Menu Button selected");
+        Debug.Log("[Game Manager] Main Menu Button selected");
     }
 
     //Which State we are in
 
 
     //Call methods ----------------------------------------------------------
+    //These are in game events that happen over time.
+    //This is the main controller of what happens be aware there is a statemachine so even if these are
+    ///called here doesn't mean that are triggered here.
     public void OpeningOfGame()
     {
         cameras[0].SetActive(true);
-        //...Turn this back on in unity editor
-        //OnFadeInOutUIElement?.Invoke();
         cameras[0].SetActive(false);
         cameras[1].SetActive(true);
         StartCoroutine(OpeningCutScene(5));
+        //Time event 1
+    }
+
+    //Switch to the gameplay Screen
+    public void SwitchGameplayScenes()
+    {
+        SceneManager.ISceneManager.SwithcScenes();
+        BubblesController.IbubblesController.BubblesJump();
+    }
+
+
+    //Switch to dialog Scene
+    public void SwitchDialogScenes()
+    {
+        bubblesStatic.SetActive(true);
     }
 
 
@@ -107,6 +127,12 @@ public class GameManager : MonoBehaviour
             i++;
             yield return new WaitForSeconds(1);
         }
+        //Time event 1
     }
 
+    //Debug mode --------------------------------------------------------------
+    public void TimeSlow()
+    {
+        Time.timeScale = 0.1f;
+    }
 }
