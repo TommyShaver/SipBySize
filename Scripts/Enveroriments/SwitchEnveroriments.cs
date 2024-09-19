@@ -18,6 +18,7 @@ public class SwitchEnveroriments : MonoBehaviour
     [SerializeField] Ease fadeInEase;
     [SerializeField] Ease fadeOutEase;
 
+    //Set Up ------------------------------------------------------------------
     private void Awake()
     {
         if (IDrinkStation != null && IDrinkStation != this)
@@ -30,20 +31,23 @@ public class SwitchEnveroriments : MonoBehaviour
         }
     }
 
+
     public void Start()
     {
-        for (int i = 0; i < enverorimentsGameObjects.Length; i++)
+        for (int i = 0; i < enverorimentsGameObjects.Length; i++) //Grab all gameobjects transform
         {
             grabTransform[i] = enverorimentsGameObjects[i].transform.position;
         }
-        SetUp();
+        SetUp(); //Once the game start send these to the loading postion and turn them off.
     }
 
 
+
+    //Call from Game Manager -------------------------------------------------
     public void OnFadeInRequest()
     {
-        gameObject.SetActive(true);
-        for (int i = 0; i < enverorimentsGameObjects.Length; i++)
+        gameObject.SetActive(true); //Draw to screen
+        for (int i = 0; i < enverorimentsGameObjects.Length; i++) //Move To postion
         {
             enverorimentsGameObjects[i].DOMoveX(grabTransform[i].x, timeToDestinationFadeIn).SetEase(fadeInEase);
         }
@@ -51,10 +55,12 @@ public class SwitchEnveroriments : MonoBehaviour
 
     public void OnFadeOutRequest()
     {
-        sendItemsToThisSpot = -100f;
+        sendItemsToThisSpot = -100f; //Send to the void for 21 by 9 screen reason
         StartCoroutine(BegainAnimamtion());
     }
 
+
+    //Begin Animation -------------------------------------------------------
     private IEnumerator BegainAnimamtion()
     {
         for (int i = 0; i < enverorimentsGameObjects.Length; i++)
@@ -70,8 +76,10 @@ public class SwitchEnveroriments : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+
+
     //Once the game starts set this up
-    private void SetUp()
+    private void SetUp() //Reason on [line 41]
     {
         for (int i = 0; i < enverorimentsGameObjects.Length; i++)
         {

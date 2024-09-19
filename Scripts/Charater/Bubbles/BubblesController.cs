@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using UnityEngine.SceneManagement;
 
 public class BubblesController : MonoBehaviour
 {
@@ -31,6 +28,20 @@ public class BubblesController : MonoBehaviour
         startingPostion = transform.position;
     }
 
+    public void BubblesDialogPostion(bool whichState)
+    {
+        if(whichState)
+        {
+            BubblesAnimationController.Instace_BubblesAnimationController.ChangeSortingLayer(true);
+            transform.localScale = new Vector3(30, 30, 0);
+        }
+        else
+        {
+            BubblesAnimationController.Instace_BubblesAnimationController.ChangeSortingLayer(false);
+            transform.localScale = new Vector3(12, 12, 0);
+        }
+    }
+
     //Jump Logic ----------------------------------------------------------------
     public void BubblesJump()
     {
@@ -48,16 +59,14 @@ public class BubblesController : MonoBehaviour
         {
             jumpSequence.Append(transform.DOMove(endPostion, fallSpeed)
             .SetEase(Ease.InQuad)
-            .OnComplete(FinishedJump)
-            );
+            .OnComplete(FinishedJump));
             backToStart = true;
         }
         else
         {
             jumpSequence.Append(transform.DOMove(startingPostion, fallSpeed)
             .SetEase(Ease.InQuad)
-            .OnComplete(FinishedJump)
-            );
+            .OnComplete(FinishedJump));
             backToStart = false;
         }
     }

@@ -7,7 +7,7 @@ using TMPro;
 public class UITextAnimation : MonoBehaviour
 {
     //Lets the Dialog Manager know when it is ok to advance to the next phrase.
-    public static event Action OnAdvanceNextString;
+   // public static event Action OnAdvanceNextString;
 
     [SerializeField] TextMeshProUGUI textComponent;
     [SerializeField] GameObject advanceTextIndacator;

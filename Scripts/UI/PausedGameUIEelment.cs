@@ -10,7 +10,7 @@ public class PausedGameUIEelment : MonoBehaviour
     [SerializeField] private Ease moveEase;
     [SerializeField] private float moveDuration;
 
-    //Opening Logic
+    //Opening Logic ------------------------------------------------------------------------
     private void Awake()
     {
         UITransform = GetComponent<RectTransform>();
@@ -23,8 +23,12 @@ public class PausedGameUIEelment : MonoBehaviour
     {
         GameManager.OnPauseMenuElement -= GamePausedUIElementLogic;
     }
+
+    //Game Paused Logic ------------------------------------------------------------------
     private void GamePausedUIElementLogic()
     {
+        //GameManager has told the pause screen to move to postion
+        //In editor this need to be its correct postion or animation wont load.
         if (!UIElementActive)
         {
             UIElementActive = true;

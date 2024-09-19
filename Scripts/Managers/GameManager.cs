@@ -2,24 +2,29 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 //I need state machine to check what state we are in. 
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager IGameManager { get; set; }
-    public static event Action OnFadeInOutUIElement;
-    public static event Action OnPauseMenuElement;
+    public static GameManager IGameManager { get; set; } //Make avablie.
+    public static event Action OnPauseMenuElement;       //This delegat call the pause menu anitamtion  -> (PausedGameUIEelment [line 26]) (UITextTransofrmLoop [line 46])
 
-    public GameObject[] cameras;
-    public GameObject bubblesStatic;
-    public GameObject dialogBox;
+    public GameObject[] cameras;                         //A list of camera in game to change for different scenes
+    public GameObject bubblesStatic;                     //This is a simple spirte place holder while Bubbles is in dialog mode
+    public GameObject dialogOverlay;                     //Black overlay to sperarte the layers
+    public GameObject otherCharaters;                    //The Other Charaters
+    public GameObject dialogBox;                         //Draw Dialog Box
  
-    private bool gameIsPaused;
-    private bool canBePaused = true;
+    private bool gameIsPaused;                           //Check to see if we are paused.
+    private bool canBePaused;                            //Are we in a cut scene?
+    private bool cashReisgterSceneLoaded;                //Check to see what scene is loaded drink staion or cash register.
+    private bool dialogSceneLoaded;                      //Check to see what scene is loaded
 
     //Starting Logic
+    //I just want to get a everything set up no need to do this before game load not a big enough game.
     private void Awake()
     {
         if (IGameManager != null && IGameManager != this)
@@ -30,14 +35,31 @@ public class GameManager : MonoBehaviour
         {
             IGameManager = this;
         }
-        bubblesStatic.SetActive(false);
-        dialogBox.SetActive(false);
     }
-    
+
+    //When The Game Loads I want it to wait a second after the unity logo pops up so I have time to load everything in the background and get everything in postion.
+    //Get everything loaded
+    //MAIN SETUP FUNCTION
+    private void Start()
+    {
+        dialogSceneLoaded = true;
+        cameras[0].SetActive(true);
+        cameras[1].SetActive(false);
+        cameras[2].SetActive(false);
+        bubblesStatic.SetActive(false);
+        canBePaused = false;
+        cashReisgterSceneLoaded = true;
+        dialogSceneLoaded = true;
+        SwitchDialogScenes();
+        //Load Music
+        //Load SFX
+        StartCoroutine(Game_Loading());
+    }
 
     //Pause Scene UI Scene ------------------------------------------------------
     public void GamePaused()
     {
+        //This command is being called from InputManager [line 15]
         if(canBePaused)
         {
             if (!gameIsPaused)
@@ -46,8 +68,8 @@ public class GameManager : MonoBehaviour
                 Time.timeScale = 0;
                 //Send Command to SFX
                 //Send Command to Music
-                // Add settings 
                 OnPauseMenuElement?.Invoke();
+                Debug.Log("[GameManager] Game was Paused");
             }
             else
             {
@@ -55,57 +77,74 @@ public class GameManager : MonoBehaviour
                 Time.timeScale = 1f;
                 //Send Command to SFX
                 //Send Command to music
-                // Close Settings
                 OnPauseMenuElement?.Invoke();
+                Debug.Log("[GameManager] Game was un-Paused");
             }
-        } 
+        }
     }
-
-    public void MainMenuSelected()
-    {
-        gameIsPaused = false;
-        Time.timeScale = 1f;
-        //Send Command to SFX
-        //Send Command to Music
-        OnFadeInOutUIElement?.Invoke();
-        OnPauseMenuElement?.Invoke();
-        canBePaused = false;
-        Debug.Log("[Game Manager] Main Menu Button selected");
-    }
-
-    //Which State we are in
-
 
     //Call methods ----------------------------------------------------------
-    //These are in game events that happen over time.
-    //This is the main controller of what happens be aware there is a statemachine so even if these are
-    ///called here doesn't mean that are triggered here.
     public void OpeningOfGame()
     {
-        cameras[0].SetActive(true);
-        cameras[0].SetActive(false);
-        cameras[1].SetActive(true);
-        StartCoroutine(OpeningCutScene(5));
-        //Time event 1
+        //This get called from TitleScreenCutScene [Line 46]
+        StartCoroutine(CutSceneAfterOpening(6));
     }
 
     //Switch to the gameplay Screen
-    public void SwitchGameplayScenes()
+    public void SwithcBetweenCashAndDrinkStation()
     {
-        SceneManager.ISceneManager.SwithcScenes();
-        BubblesController.IbubblesController.BubblesJump();
+        if (cashReisgterSceneLoaded)
+        {
+            StartCoroutine(ToDrinkStation());
+            cashReisgterSceneLoaded = false;
+            cameras[2].SetActive(true);
+            cameras[1].SetActive(false);
+        }
+        else
+        {
+            StartCoroutine(ToCashRegister());
+            cashReisgterSceneLoaded = true;
+            cameras[1].SetActive(true);
+            cameras[2].SetActive(false);
+        }
+        BubblesController.IbubblesController.BubblesJump(); //Bubles Aniamtion between each is set up
+        Debug.Log("[GameManager] Switch Between cash and drink called");
     }
-
 
     //Switch to dialog Scene
     public void SwitchDialogScenes()
     {
-        bubblesStatic.SetActive(true);
+        if(!dialogSceneLoaded)
+        {
+            bubblesStatic.SetActive(true);
+            otherCharaters.SetActive(true);
+            dialogOverlay.SetActive(true);
+            dialogBox.SetActive(true);
+            dialogSceneLoaded = true;
+            BubblesController.IbubblesController.BubblesDialogPostion(true);
+        }
+        else
+        {
+            bubblesStatic.SetActive(false);
+            otherCharaters.SetActive(false);
+            dialogOverlay.SetActive(false);
+            dialogBox.SetActive(false);
+            dialogSceneLoaded = false;
+            BubblesController.IbubblesController.BubblesDialogPostion(false);
+        }
+        Debug.Log("[GameManager] Loaded Dialog mode");
     }
 
-
     //Timed evetns Logic -----------------------------------------------------
-    private IEnumerator OpeningCutScene(int timer)
+    private IEnumerator Game_Loading()
+    {
+        yield return new WaitForSeconds(.5f);
+        //TitleScreenCutScene.IOpeningCutScene.GameLoaded();
+        //Play Music
+        //Play SFX
+    }
+
+    private IEnumerator CutSceneAfterOpening(int timer)
     {
         int i = 0;
         while(i < timer)
@@ -120,19 +159,57 @@ public class GameManager : MonoBehaviour
                 case 2:
                     BubblesAnimationController.Instace_BubblesAnimationController.BubblesBody(2);
                     break;
-                case 4:
-                    //Dialog apperas
+                case 5:
+                    SwitchDialogScenes();
+                    canBePaused = true;
                     break;
             }
             i++;
             yield return new WaitForSeconds(1);
         }
-        //Time event 1
+    }
+
+    private IEnumerator ToDrinkStation()
+    {
+        CashRegisterSceneAnimation.ICashRegisterScene.OnFadeOutRequest();
+        yield return new WaitForSeconds(.3f);
+        SwitchEnveroriments.IDrinkStation.OnFadeInRequest();
+    }
+
+    private IEnumerator ToCashRegister()
+    {
+        SwitchEnveroriments.IDrinkStation.OnFadeOutRequest();
+        yield return new WaitForSeconds(.3f);
+        CashRegisterSceneAnimation.ICashRegisterScene.OnFadeInRequest();
     }
 
     //Debug mode --------------------------------------------------------------
+    //Slow down to watch animation.
     public void TimeSlow()
     {
         Time.timeScale = 0.1f;
+    }
+
+    //Load the title screen animation.
+    public void _OnGameLoad()
+    {
+        TitleScreenCutScene.IOpeningCutScene.GameLoaded();
+    }
+
+    //Load Between different Scenes
+    public void _SceneSwitchCheck()
+    {
+        SwithcBetweenCashAndDrinkStation();
+    }
+
+    public void _SceneDialogCheck()
+    {
+        SwitchDialogScenes();
+    }
+
+    //Reset Scene
+    public void _SceneReset()
+    {
+        SceneManager.LoadScene("GamePlayScene");
     }
 }

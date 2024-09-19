@@ -19,7 +19,7 @@ public class CashRegisterSceneAnimation : MonoBehaviour
     [SerializeField] Ease fadeInEase;
     [SerializeField] Ease fadeOutEase;
 
-
+    //Set Up ----------------------------------------------------------------
     private void Awake()
     {
         if (ICashRegisterScene != null && ICashRegisterScene != this)
@@ -34,16 +34,19 @@ public class CashRegisterSceneAnimation : MonoBehaviour
 
     public void Start()
     {
+        //Grab all the gameobjects in arry transforms postion. 
         for (int i = 0; i < enverorimentsGameObjects.Length; i++)
         {
             grabTransform[i] = enverorimentsGameObjects[i].transform.position;
         }
     }
 
+
+    //Call from Game Manager -------------------------------------------------
     public void OnFadeInRequest()
     {
-        gameObject.SetActive(true);
-        for (int i = 0; i < enverorimentsGameObjects.Length; i++)
+        gameObject.SetActive(true); // Draw to screen
+        for (int i = 0; i < enverorimentsGameObjects.Length; i++) // Move all gameobject into place.
         {
             enverorimentsGameObjects[i].DOMoveX(grabTransform[i].x, timeToDestinationFadeIn).SetEase(fadeInEase);
         }
@@ -51,11 +54,13 @@ public class CashRegisterSceneAnimation : MonoBehaviour
 
     public void OnFadeOutRequest()
     {
-        sendItemsToThisSpot = -100f;
+        sendItemsToThisSpot = -100f; // Move gameobejcts way out there did this for people that have  21 by 9 monitors.
         StartCoroutine(BegainAnimamtion());
     }
 
 
+
+    //Begin Animation -------------------------------------------------------
     private IEnumerator BegainAnimamtion()
     {
         for (int i = 0; i < enverorimentsGameObjects.Length; i++)
@@ -63,11 +68,11 @@ public class CashRegisterSceneAnimation : MonoBehaviour
             enverorimentsGameObjects[i].DOMoveX(sendItemsToThisSpot, timeToDestinationFadeOut).SetEase(fadeOutEase);
             yield return new WaitForSeconds(timeToNextAnimation);
         }
-        yield return new WaitForSeconds(.5f);
-        for(int i = 0; i < enverorimentsGameObjects.Length; i++)
+        yield return new WaitForSeconds(.5f); //Make sure DoTween finishes it job 
+        for(int i = 0; i < enverorimentsGameObjects.Length; i++) // Move everything to load positons
         {
             enverorimentsGameObjects[i].DOMoveX(20f, 0, true);  
         }
-        gameObject.SetActive(false);
+        gameObject.SetActive(false); // Turn off gameobjects so you can see them.
     }
 }

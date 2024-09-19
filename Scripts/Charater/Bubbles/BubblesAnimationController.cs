@@ -9,11 +9,13 @@ using UnityEngine;
 
 public class BubblesAnimationController : MonoBehaviour
 {
+    public GameObject bubbles;
     public static BubblesAnimationController Instace_BubblesAnimationController { get; set; }
     public Animator bubblesBody;
     public Animator bubblesFace;
 
     public SpriteRenderer spriteRendererBody;
+    public SpriteRenderer spriteRendererFace;
 
     //Bubbles Body Animation
     private const string BUBBLES_IDLE = "Bubbles_Idle";
@@ -203,6 +205,21 @@ public class BubblesAnimationController : MonoBehaviour
             Debug.Log("[Bubbles Animation Controller] <color=Green>Bubbles body animation played</color> " + nameOfAnimationFace);
         }
     }
+
+    public void ChangeSortingLayer(bool whichLayer)
+    {
+        if (whichLayer)
+        {
+            spriteRendererBody.sortingLayerName = "Dialog";
+            spriteRendererFace.sortingLayerName = "Dialog";
+        }
+        else
+        {
+            spriteRendererBody.sortingLayerName = "Player";
+            spriteRendererFace.sortingLayerName = "Player";
+        }
+    }
+
 
     //In game animation events -------------------------------------------------------------------------------------------------
     public void BubblesTalking(int body, int face)

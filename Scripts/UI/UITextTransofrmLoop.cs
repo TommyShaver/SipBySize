@@ -5,6 +5,7 @@ using DG.Tweening;
 
 public class UITextTransofrmLoop : MonoBehaviour
 {
+    //All these feilds are used for scaling ----------------
     [SerializeField] RectTransform UITransform;
     [SerializeField] float moveDistance;
     [SerializeField] float duration;
@@ -13,8 +14,10 @@ public class UITextTransofrmLoop : MonoBehaviour
     private bool hasRun;
     private bool startAnim= true;
     private Tween UITween;
+    //This was for scaling I was using this animation for other UI elements.
+    //So I added in editor bools to check if it should run or not. 
 
-    //Set Up -----------------------------------------
+    //Set Up -----------------------------------------------
     private void Start()
     {
         AnimationSetUp();
@@ -37,7 +40,7 @@ public class UITextTransofrmLoop : MonoBehaviour
         GameManager.OnPauseMenuElement -= UIAniamtion;
         if(hasRun)
         {
-            UITween.Pause();
+            UITween.Pause(); 
         }
     }
 

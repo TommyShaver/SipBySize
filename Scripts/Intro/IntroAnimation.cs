@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class IntroAnimation : MonoBehaviour
 {
+    public static IntroAnimation IIntroAnimation { get; set; }
     public int spawnindex;
     public GameObject prefabsToSpwan;
     public Transform prefabTrasform;
@@ -16,6 +17,19 @@ public class IntroAnimation : MonoBehaviour
 
     [SerializeField] float nextAnimation;
     private bool colorSwitch;
+
+    //Set Up ----------------------------------------------------------------
+    private void Awake()
+    {
+        if (IIntroAnimation != null && IIntroAnimation != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            IIntroAnimation = this;
+        }
+    }
 
     //Public calls to loand and unload ---------------------------------------
     public void LoadAniamtion()
@@ -36,8 +50,6 @@ public class IntroAnimation : MonoBehaviour
         {
             spriteRenderer.color = color;
         }
-
-        //You should do this code on the gameobject itself not point of doing it here.
     }
 
     //Timers for in game events -----------------------------------------------
