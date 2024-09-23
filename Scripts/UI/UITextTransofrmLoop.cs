@@ -11,8 +11,7 @@ public class UITextTransofrmLoop : MonoBehaviour
     [SerializeField] float duration;
     [SerializeField] bool startDuringLoad;
     [SerializeField] bool animWorksWithTimeScale;
-    private bool hasRun;
-    private bool startAnim= true;
+    private bool startAnim = true;
     private Tween UITween;
     //This was for scaling I was using this animation for other UI elements.
     //So I added in editor bools to check if it should run or not. 
@@ -30,18 +29,13 @@ public class UITextTransofrmLoop : MonoBehaviour
     private void OnEnable()
     {
         GameManager.OnPauseMenuElement += UIAniamtion;
-        if(!hasRun)
-        {
-            UITween.Play();
-        }
+
+        UITween.Play();
     }
     private void OnDisable()
     {
         GameManager.OnPauseMenuElement -= UIAniamtion;
-        if(hasRun)
-        {
-            UITween.Pause(); 
-        }
+        UITween.Pause();
     }
 
 
@@ -54,7 +48,7 @@ public class UITextTransofrmLoop : MonoBehaviour
     //Called from loading screen
     private void UIAniamtion()
     {
-        if(startAnim)
+        if (startAnim)
         {
             UITween.Play();
             startAnim = false;
@@ -64,7 +58,7 @@ public class UITextTransofrmLoop : MonoBehaviour
             UITween.Pause();
             startAnim = true;
         }
-        
+
     }
 
 }

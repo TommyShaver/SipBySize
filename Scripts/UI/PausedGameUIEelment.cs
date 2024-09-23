@@ -37,7 +37,7 @@ public class PausedGameUIEelment : MonoBehaviour
         else
         {
             UIElementActive = false;
-            UITransform.DOAnchorPosY(-1000f, moveDuration).SetEase(moveEase).SetUpdate(true);
+            UITransform.DOAnchorPosY(-1100f, moveDuration).SetEase(moveEase).SetUpdate(true);
         }
         Debug.Log("Pause Menu UI Element: " + UIElementActive);
     }

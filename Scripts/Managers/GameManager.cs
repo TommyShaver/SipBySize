@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour
     private bool cashReisgterSceneLoaded;                //Check to see what scene is loaded drink staion or cash register.
     private bool dialogSceneLoaded;                      //Check to see what scene is loaded
 
+    public string[] madIhaveToDoItThisWay;
+
     //Starting Logic
     //I just want to get a everything set up no need to do this before game load not a big enough game.
     private void Awake()
@@ -47,7 +49,7 @@ public class GameManager : MonoBehaviour
         cameras[1].SetActive(false);
         cameras[2].SetActive(false);
         bubblesStatic.SetActive(false);
-        canBePaused = false;
+        canBePaused = true;
         cashReisgterSceneLoaded = true;
         dialogSceneLoaded = true;
         SwitchDialogScenes();
@@ -183,9 +185,10 @@ public class GameManager : MonoBehaviour
         CashRegisterSceneAnimation.ICashRegisterScene.OnFadeInRequest();
     }
 
+
     //Debug mode --------------------------------------------------------------
     //Slow down to watch animation.
-    public void TimeSlow()
+    public void _TimeSlow()
     {
         Time.timeScale = 0.1f;
     }
@@ -211,5 +214,14 @@ public class GameManager : MonoBehaviour
     public void _SceneReset()
     {
         SceneManager.LoadScene("GamePlayScene");
+    }
+
+    public void _TestAnimation()
+    {
+        OtherCharaterAnimationController.Instace_OtherCharaterAnimationController.OtherCharaterBodyLogic(OtherCharaterAnimationController.CharaterBodySprite.button);
+    }
+    public void _TestFaceAnim()
+    {
+        OtherCharaterAnimationController.Instace_OtherCharaterAnimationController.OtherCharaterFace(OtherCharaterAnimationController.CharaterBodySprite.button, OtherCharaterAnimationController.FaceAnim.happy);
     }
 }
