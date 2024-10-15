@@ -5,11 +5,13 @@ using UnityEngine;
 
 public class SwitchEnveroriments : MonoBehaviour
 {
-   public static SwitchEnveroriments IDrinkStation { get; set; }
-   public Transform[] enverorimentsGameObjects;
+    public static SwitchEnveroriments IDrinkStation { get; set; }
+    public Transform[] enverorimentsGameObjects;
+    public GameObject leftTri;
+    public GameObject rightTri;
 
     private float sendItemsToThisSpot;
-    private Vector3[] grabTransform = new Vector3[16];
+    private Vector3[] grabTransform = new Vector3[17];
 
     [SerializeField] float timeToDestinationFadeOut;
     [SerializeField] float timeToDestinationFadeIn;
@@ -51,12 +53,16 @@ public class SwitchEnveroriments : MonoBehaviour
         {
             enverorimentsGameObjects[i].DOMoveX(grabTransform[i].x, timeToDestinationFadeIn).SetEase(fadeInEase);
         }
+        leftTri.SetActive(true);
+        rightTri.SetActive(true);
     }
 
     public void OnFadeOutRequest()
     {
         sendItemsToThisSpot = -100f; //Send to the void for 21 by 9 screen reason
         StartCoroutine(BegainAnimamtion());
+        leftTri.SetActive(false);
+        rightTri.SetActive(false);
     }
 
 
@@ -86,5 +92,7 @@ public class SwitchEnveroriments : MonoBehaviour
             enverorimentsGameObjects[i].DOMoveX(20f, 0, true);
         }
         gameObject.SetActive(false);
+        leftTri.SetActive(false);
+        rightTri.SetActive(false);
     }
 }

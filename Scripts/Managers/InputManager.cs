@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
+    private bool waitforspace;
     private void Update()
     {
         if (Input.anyKey)
@@ -22,5 +23,21 @@ public class InputManager : MonoBehaviour
             //LeftMouse_Clicked?.Invoke();
             //Debug.Log("Input Manager: Left Mouse clicked");
         }
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            if(!waitforspace)
+            {
+                StartCoroutine(SpaceBarWait());
+                GameManager.IGameManager.SpaceBarHit();
+                Debug.Log("[InputManager] Space bar was clicked");
+                waitforspace = true;
+            }
+        }
+    }
+
+    private IEnumerator SpaceBarWait()
+    {
+        yield return new WaitForSeconds(.5f);
+        waitforspace = false;
     }
 }

@@ -8,7 +8,7 @@ public class BubblesController : MonoBehaviour
     [SerializeField] float jumpDuration;
     private Vector3 startingPostion;
     private Vector3 middlePostion = new Vector3(0.5f, 1f, 0);
-    private Vector3 endPostion = new Vector3(-1, -1, 0);
+    private Vector3 endPostion = new Vector3(1, -.25f, 0);
     private Vector3 sendBubblesOffScreen = new Vector3(50, 0, 0);
     private Vector3 bubblesDialogPostion = new Vector3(5, -0.5f, 0);
     private bool backToStart;
@@ -35,8 +35,9 @@ public class BubblesController : MonoBehaviour
         if(whichState)
         {
             BubblesAnimationController.Instace_BubblesAnimationController.ChangeSortingLayer(true);
-            transform.localScale = new Vector3(30, 30, 0);
+            transform.localScale = new Vector3(0.1f, 0.1f, 0);
             transform.DOMove(sendBubblesOffScreen , 0);
+            transform.localScale = new Vector3(30, 30, 0);
             transform.DOMove(bubblesDialogPostion, 0.4f);
         }
         else

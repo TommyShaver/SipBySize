@@ -20,9 +20,14 @@ public class SelectorArrows : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        myTween = transform.DOLocalMoveX(transform.position.x + objectMovement, duration).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
+    }
+
     private void OnEnable()
     {
-       myTween = transform.DOMoveX(transform.position.x + objectMovement, duration).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
+        myTween.Play();
     }
 
     private void OnDisable()

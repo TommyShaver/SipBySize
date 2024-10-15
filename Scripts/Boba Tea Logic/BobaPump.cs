@@ -13,6 +13,7 @@ public class BobaPump : MonoBehaviour
 
     public SpriteRenderer pumpAnimation;
     private int currentColor = 0;
+    private Animator bobaPumpAnim;
 
     private void Awake()
     {
@@ -24,18 +25,32 @@ public class BobaPump : MonoBehaviour
         {
             IBobaPump = this;
         }
+        bobaPumpAnim = GetComponent<Animator>();
     }
     // Start is called before the first frame update
     void Start()
     {
         ColoringRendersLogic(0);
+        pumpPour.SetActive(false);
     }
 
+    //Animaiotn -------------------------------------------------------------
+    public void PumpAnimaiotn()
+    {
+        bobaPumpAnim.Play("PumpAnim");
+    }
 
-    //Aniamtion void
+    public void AnimationPumped()
+    {
+        pumpPour.SetActive(true);
+    }
 
+    public void EndOfAnimtionPump()
+    {
+        pumpPour.SetActive(false);
+        bobaPumpAnim.Play("PumpIdle");
+    }
     //Color selector Void
-
     public void TestMessage(GameObject whichArrow)
     {
         if (whichArrow.tag == "LeftArrow")

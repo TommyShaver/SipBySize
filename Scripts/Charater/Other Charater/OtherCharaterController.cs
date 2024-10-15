@@ -13,7 +13,7 @@ public class OtherCharaterController : MonoBehaviour
 
     private void OnEnable()
     {
-        transform.DOMoveX(-50, 0);
+        transform.DOMoveX(sendSpriteOffScreen, 0);
         transform.DOMove(startPos, 0.4f);
     }
 }

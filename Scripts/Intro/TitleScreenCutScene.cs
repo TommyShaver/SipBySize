@@ -24,6 +24,10 @@ public class TitleScreenCutScene : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        GameLoaded();
+    }
 
     // Start is called before the first frame update
     public void GameLoaded()
@@ -34,7 +38,7 @@ public class TitleScreenCutScene : MonoBehaviour
 
     private IEnumerator OnGameLoad()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(1.5f);
         IntroAnimation.IIntroAnimation.LoadAniamtion();
         yield return new WaitForSeconds(2);
         backgroundObject.SetActive(false);

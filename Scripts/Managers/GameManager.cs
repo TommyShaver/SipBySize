@@ -25,8 +25,7 @@ public class GameManager : MonoBehaviour
 
     public string[] madIhaveToDoItThisWay;
 
-    //Starting Logic
-    //I just want to get a everything set up no need to do this before game load not a big enough game.
+    //Starting Logic --------------------------------------------------------------------------------------------------------
     private void Awake()
     {
         if (IGameManager != null && IGameManager != this)
@@ -39,29 +38,32 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    //When The Game Loads I want it to wait a second after the unity logo pops up so I have time to load everything in the background and get everything in postion.
+    //Opening animaiotn is controlled from opeing game object which sets up to game manager
     //Get everything loaded
     //MAIN SETUP FUNCTION
     private void Start()
     {
-        dialogSceneLoaded = true;
+        //Load Music
+        //Load SFX
+
         cameras[0].SetActive(true);
         cameras[1].SetActive(false);
         cameras[2].SetActive(false);
+
         bubblesStatic.SetActive(false);
-        canBePaused = true;
+
+        //I did this to load the scene to the correct postion and state.
+        dialogSceneLoaded = true; 
+        canBePaused = false;
         cashReisgterSceneLoaded = true;
-        dialogSceneLoaded = true;
+
+        //This turns off the dialog scene as a check just incase
         SwitchDialogScenes();
-        //Load Music
-        //Load SFX
-        StartCoroutine(Game_Loading());
     }
 
     //Pause Scene UI Scene ------------------------------------------------------
     public void GamePaused()
     {
-        //This command is being called from InputManager [line 15]
         if(canBePaused)
         {
             if (!gameIsPaused)
@@ -117,17 +119,18 @@ public class GameManager : MonoBehaviour
     public void SwitchDialogScenes()
     {
         if(!dialogSceneLoaded)
-        {
+        {  
             bubblesStatic.SetActive(true);
             otherCharaters.SetActive(true);
             dialogOverlay.SetActive(true);
             dialogBox.SetActive(true);
             dialogSceneLoaded = true;
+            cameras[0].SetActive(true);
+            cameras[1].SetActive(false);
             BubblesController.IbubblesController.BubblesDialogPostion(true);
         }
         else
         {
-            bubblesStatic.SetActive(false);
             otherCharaters.SetActive(false);
             dialogOverlay.SetActive(false);
             dialogBox.SetActive(false);
@@ -137,15 +140,8 @@ public class GameManager : MonoBehaviour
         Debug.Log("[GameManager] Loaded Dialog mode");
     }
 
-    //Timed evetns Logic -----------------------------------------------------
-    private IEnumerator Game_Loading()
-    {
-        yield return new WaitForSeconds(.5f);
-        //TitleScreenCutScene.IOpeningCutScene.GameLoaded();
-        //Play Music
-        //Play SFX
-    }
 
+    //Timed evetns Logic -----------------------------------------------------
     private IEnumerator CutSceneAfterOpening(int timer)
     {
         int i = 0;
@@ -162,13 +158,29 @@ public class GameManager : MonoBehaviour
                     BubblesAnimationController.Instace_BubblesAnimationController.BubblesBody(2);
                     break;
                 case 5:
-                    SwitchDialogScenes();
+                    //Dialog Box with bubbles talking about the game (IT'S TIME TO PLAY THE GAME)
                     canBePaused = true;
                     break;
             }
             i++;
             yield return new WaitForSeconds(1);
         }
+    }
+
+    //Incoming input data ----------------------------------------------------------
+    public void SpaceBarHit()
+    {
+        if (!cashReisgterSceneLoaded)
+        {
+            BubblesAnimationController.Instace_BubblesAnimationController.BubblesBody(3);
+            BobaPump.IBobaPump.PumpAnimaiotn();
+        }
+    }
+
+    public void LeftClickHit()
+    {
+        //advance text
+
     }
 
     private IEnumerator ToDrinkStation()
@@ -186,42 +198,5 @@ public class GameManager : MonoBehaviour
     }
 
 
-    //Debug mode --------------------------------------------------------------
-    //Slow down to watch animation.
-    public void _TimeSlow()
-    {
-        Time.timeScale = 0.1f;
-    }
-
-    //Load the title screen animation.
-    public void _OnGameLoad()
-    {
-        TitleScreenCutScene.IOpeningCutScene.GameLoaded();
-    }
-
-    //Load Between different Scenes
-    public void _SceneSwitchCheck()
-    {
-        SwithcBetweenCashAndDrinkStation();
-    }
-
-    public void _SceneDialogCheck()
-    {
-        SwitchDialogScenes();
-    }
-
-    //Reset Scene
-    public void _SceneReset()
-    {
-        SceneManager.LoadScene("GamePlayScene");
-    }
-
-    public void _TestAnimation()
-    {
-        OtherCharaterAnimationController.Instace_OtherCharaterAnimationController.OtherCharaterBodyLogic(OtherCharaterAnimationController.CharaterBodySprite.button);
-    }
-    public void _TestFaceAnim()
-    {
-        OtherCharaterAnimationController.Instace_OtherCharaterAnimationController.OtherCharaterFace(OtherCharaterAnimationController.CharaterBodySprite.button, OtherCharaterAnimationController.FaceAnim.happy);
-    }
+    //storyline -------------------------------------------------------------------------------------
 }
