@@ -6,6 +6,7 @@ using UnityEngine;
 public class InputManager : MonoBehaviour
 {
     private bool waitforspace;
+    private bool cashRegisterSceneLoaded;
     private void Update()
     {
         if (Input.anyKey)
@@ -13,24 +14,28 @@ public class InputManager : MonoBehaviour
             //This read only function for idle animaiton on bubbles.
             //Debug.Log("Any Key press check");
         }
+        if(Input.GetMouseButtonDown(0))
+        {
+            DialogManager.IdialogManager.IncomingInfo();
+            Debug.Log("[Input Manager] Left mouse was clicked");
+        }
         if (Input.GetKeyDown(KeyCode.P))
         {
             GameManager.IGameManager.GamePaused();
             Debug.Log("[Input Manager] P Key has been pressed");
         }
-        if(Input.GetMouseButton(0))
-        {
-            //LeftMouse_Clicked?.Invoke();
-            //Debug.Log("Input Manager: Left Mouse clicked");
-        }
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            if(!waitforspace)
+            if(!cashRegisterSceneLoaded)
             {
-                StartCoroutine(SpaceBarWait());
-                GameManager.IGameManager.SpaceBarHit();
-                Debug.Log("[InputManager] Space bar was clicked");
-                waitforspace = true;
+                if (!waitforspace)
+                {
+                    StartCoroutine(SpaceBarWait());
+                    BubblesAnimationController.Instace_BubblesAnimationController.BubblesBody(3);
+                    BobaPump.IBobaPump.PumpAnimaiotn();
+                    Debug.Log("[InputManager] Space bar was clicked");
+                    waitforspace = true;
+                }
             }
         }
     }

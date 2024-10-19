@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     public GameObject dialogOverlay;                     //Black overlay to sperarte the layers
     public GameObject otherCharaters;                    //The Other Charaters
     public GameObject dialogBox;                         //Draw Dialog Box
- 
+    public GameObject justTextBox;                       //This is for opening.
     private bool gameIsPaused;                           //Check to see if we are paused.
     private bool canBePaused;                            //Are we in a cut scene?
     private bool cashReisgterSceneLoaded;                //Check to see what scene is loaded drink staion or cash register.
@@ -43,28 +43,13 @@ public class GameManager : MonoBehaviour
     //MAIN SETUP FUNCTION
     private void Start()
     {
-        //Load Music
-        //Load SFX
-
-        cameras[0].SetActive(true);
-        cameras[1].SetActive(false);
-        cameras[2].SetActive(false);
-
-        bubblesStatic.SetActive(false);
-
-        //I did this to load the scene to the correct postion and state.
-        dialogSceneLoaded = true; 
-        canBePaused = false;
-        cashReisgterSceneLoaded = true;
-
-        //This turns off the dialog scene as a check just incase
-        SwitchDialogScenes();
+        OnLoadOfGame();
     }
 
     //Pause Scene UI Scene ------------------------------------------------------
     public void GamePaused()
     {
-        if(canBePaused)
+        if (canBePaused)
         {
             if (!gameIsPaused)
             {
@@ -88,6 +73,27 @@ public class GameManager : MonoBehaviour
     }
 
     //Call methods ----------------------------------------------------------
+    //storyline -------------------------------------------------------------------------------------
+    private void OnLoadOfGame()
+    {
+        //Load Music
+        //Load SFX
+
+        cameras[0].SetActive(true);
+        cameras[1].SetActive(false);
+        cameras[2].SetActive(false);
+
+        bubblesStatic.SetActive(false);
+
+        //I did this to load the scene to the correct postion and state.
+        dialogSceneLoaded = true;
+        canBePaused = false;
+        cashReisgterSceneLoaded = true;
+
+        //This turns off the dialog scene as a check just incase
+        SwitchDialogScenes();
+    }
+
     public void OpeningOfGame()
     {
         //This get called from TitleScreenCutScene [Line 46]
@@ -118,8 +124,8 @@ public class GameManager : MonoBehaviour
     //Switch to dialog Scene
     public void SwitchDialogScenes()
     {
-        if(!dialogSceneLoaded)
-        {  
+        if (!dialogSceneLoaded)
+        {
             bubblesStatic.SetActive(true);
             otherCharaters.SetActive(true);
             dialogOverlay.SetActive(true);
@@ -145,7 +151,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator CutSceneAfterOpening(int timer)
     {
         int i = 0;
-        while(i < timer)
+        while (i < timer)
         {
             switch (i)
             {
@@ -167,22 +173,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    //Incoming input data ----------------------------------------------------------
-    public void SpaceBarHit()
-    {
-        if (!cashReisgterSceneLoaded)
-        {
-            BubblesAnimationController.Instace_BubblesAnimationController.BubblesBody(3);
-            BobaPump.IBobaPump.PumpAnimaiotn();
-        }
-    }
-
-    public void LeftClickHit()
-    {
-        //advance text
-
-    }
-
     private IEnumerator ToDrinkStation()
     {
         CashRegisterSceneAnimation.ICashRegisterScene.OnFadeOutRequest();
@@ -196,7 +186,4 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(.3f);
         CashRegisterSceneAnimation.ICashRegisterScene.OnFadeInRequest();
     }
-
-
-    //storyline -------------------------------------------------------------------------------------
 }

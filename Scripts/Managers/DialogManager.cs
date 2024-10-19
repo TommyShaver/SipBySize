@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using DG.Tweening;
 
 public class DialogManager : MonoBehaviour
 {
@@ -13,35 +14,42 @@ public class DialogManager : MonoBehaviour
     public TextMeshProUGUI nameplate;
     public TextMeshProUGUI textBox;
     public GameObject advanceTextButton;
+    public RectTransform dialogBoxGameObject;
 
     [SerializeField] private float textSpeed;
 
+    private bool dialogAnimPlayed;
+    private bool canAdvanceText;
+    private int currentDialog;
+    private int nextLineDialogArry;
+
+    //All Charater Text ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     private string[] charaterNames = { "Biscuit", "Bubbles", "Button", "Chilly", "Cinder", "Clover", "Joey", "Marlow", "Pubbles", "Stapmy" };
 
     private string[] bubblesDialog =
     {
         //Opening 0 - 10
-        "Okay, I need to do good in getting tip money so I can save up and get that new controller. Then, I can finally beat “Almost Home”!",
-        "The quicker and more accurate I make these drinks, the better tips I'll get!",
-        "But first, I need to make myself a coffee before customers show up.",
-        "Let’s do this! First, I need to choose the correct drink. I can use the arrows to select which drink I want with the mouse.",
-        "Choosing the right flavor is important! Customers tip less if they get their orders wrong or even if you don’t fill the cup correctly. So we have to be quick and accurate.",
-        "Nice coffee! See the meter on the right? Once it's in the green area, hit the spacebar quickly! That’s the perfect amount for the order. Let's try it.",
-        "Perfect! Now let’s add some cream. I don’t want too much cream though, or else it will hurt my stomach.",
-        "Now for the boba. Select the boba just like the drinks and hit the spacebar at the right time and they will fly in. I want tapioca pearls today.",
-        "I must do the orders in proper order so I don't get confused. All the notes will show up on the left side, and money will be at the bottom right. 60 bucks won’t be too hard… Right?",
-        "Ahhhh…so good. Oh! Here come the customers",
+        "Okay, I need to do good in getting tip money so I can save up and get that new controller. Then, I can finally beat “Almost Home”!",                                                   //0
+        "The quicker and more accurate I make these drinks, the better tips I'll get!",                                                                                                         //1
+        "But first, I need to make myself a coffee before customers show up.",                                                                                                                  //2
+        "Let’s do this! First, I need to choose the correct drink. I can use the arrows to select which drink I want with the mouse.",                                                          //3
+        "Choosing the right flavor is important! Customers tip less if they get their orders wrong or even if you don’t fill the cup correctly. So we have to be quick and accurate.",          //4
+        "Nice coffee! See the meter on the right? Once it's in the green area, hit the spacebar quickly! That’s the perfect amount for the order. Let's try it.",                               //5
+        "Perfect! Now let’s add some cream. I don’t want too much cream though, or else it will hurt my stomach.",                                                                              //6
+        "Now for the boba. Select the boba just like the drinks and hit the spacebar at the right time and they will fly in. I want tapioca pearls today.",                                     //7
+        "I must do the orders in proper order so I don't get confused. All the notes will show up on the left side, and money will be at the bottom right. 60 bucks won’t be too hard… Right?", //8
+        "Ahhhh…so good. Oh! Here come the customers",                                                                                                                                           //9
 
         //Bubbles Respones 11-14
-        "Hello, how can I help you?",
-        "Hi, what would you like today?",
-        "What would you like to order today?",
-        "How may I help you?",
+        "Hello, how can I help you?",           //10
+        "Hi, what would you like today?",       //11
+        "What would you like to order today?",  //12
+        "How may I help you?",                  //13
 
         //Bubbles after making drinks 15-17
-        "Here you go!",
-        "Enjoy!",
-        "Thank you for waiting."
+        "Here you go!",                         //14
+        "Enjoy!",                               //15
+        "Thank you for waiting."                //16
     };
 
     private string[] biscuitDialog =
@@ -145,6 +153,8 @@ public class DialogManager : MonoBehaviour
         //Took to much time
         "This is taking too long. I have to go."
     };
+    //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
     //Dialog box logic ---------------------------------------------------------
     //Set up ------------------------------------------------------------------
@@ -163,9 +173,22 @@ public class DialogManager : MonoBehaviour
     private void Start()
     {
         ClearDialog();
+        CloseDialogBox();
     }
 
     //Logic -------------------------------------------------------------------
+    private void OpenDialogBox()
+    {
+        dialogBoxGameObject.DOScale(Vector3.one, 0.1f);
+        dialogAnimPlayed = true;
+        
+    }
+    private void CloseDialogBox()
+    {
+        dialogBoxGameObject.DOScale(Vector3.zero, 0.1f);
+        dialogAnimPlayed = false;
+    }
+
     public void ClearDialog()
     {
         textBox.text = string.Empty;
@@ -178,6 +201,10 @@ public class DialogManager : MonoBehaviour
 
     public void ChangeTextBoxDialog(int correctArry, int dialog)
     {
+        if(!dialogAnimPlayed)
+        {
+            OpenDialogBox();
+        }
         ClearDialog();
         advanceTextButton.SetActive(false);
         switch (correctArry)
@@ -187,46 +214,55 @@ public class DialogManager : MonoBehaviour
                 //turn off advance arrow
                 SwitchNamePlate(1);
                 StartCoroutine(TypeLine(bubblesDialog[dialog]));
+                currentDialog = 1;
                 break;
             //Biscuit
             case 1:
                 SwitchNamePlate(0);
                 StartCoroutine(TypeLine(biscuitDialog[dialog]));
+                currentDialog = 2;
                 break;
             //Button
             case 2:
                 SwitchNamePlate(3);
                 StartCoroutine(TypeLine(buttonDialog[dialog]));
+                currentDialog = 3;
                 break;
             //Cinder
             case 3:
                 SwitchNamePlate(4);
                 StartCoroutine(TypeLine(cinderDialog[dialog]));
+                currentDialog = 4;
                 break;
             //Chilly
             case 4:
                 SwitchNamePlate(5);
                 StartCoroutine(TypeLine(chillyDialog[dialog]));
+                currentDialog = 5;
                 break;
             //Joey
             case 5:
                 SwitchNamePlate(6);
                 StartCoroutine(TypeLine(joeyDialog[dialog]));
+                currentDialog = 6;
                 break;
             //Marlow
             case 6:
                 SwitchNamePlate(7);
                 StartCoroutine(TypeLine(marlowDialog[dialog]));
+                currentDialog = 7;
                 break;
             //Puddles
             case 7:
                 SwitchNamePlate(8);
                 StartCoroutine(TypeLine(puddlesDialog[dialog]));
+                currentDialog = 8;
                 break;
             //Stampy
             case 8:
                 SwitchNamePlate(9);
                 StartCoroutine(TypeLine(stampyDialog[dialog]));
+                currentDialog = 9;
                 break;
         }
     }
@@ -239,6 +275,47 @@ public class DialogManager : MonoBehaviour
             yield return new WaitForSeconds(textSpeed);
         }
         advanceTextButton.SetActive(true);
-        //send out clickable command;
+        canAdvanceText = true;
+    }
+     
+    public void IncomingInfo()
+    {
+        if(canAdvanceText)
+        {
+            canAdvanceText = false;
+            TextBoxUpdate();
+        }
+    }
+    private int IncermentNumber()
+    {
+        nextLineDialogArry++;
+        return nextLineDialogArry;
+    }
+
+    private void TextBoxUpdate()
+    {
+        switch(currentDialog)
+        {
+            case 0:
+                ClearDialog();
+                CloseDialogBox();
+                break;
+            case 1:
+                //Bubbles opening 
+                if(nextLineDialogArry < 2)
+                {
+                    ChangeTextBoxDialog(0, IncermentNumber());
+                }
+                else
+                {
+                    currentDialog = 0;
+                    nextLineDialogArry = 0;
+                    TextBoxUpdate();
+                }
+                break;
+            case 2:
+
+                break;
+        }
     }
 }
