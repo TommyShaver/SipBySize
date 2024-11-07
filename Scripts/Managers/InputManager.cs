@@ -33,6 +33,7 @@ public class InputManager : MonoBehaviour
                     StartCoroutine(SpaceBarWait());
                     BubblesAnimationController.Instace_BubblesAnimationController.BubblesBody(3);
                     BobaPump.IBobaPump.PumpAnimaiotn();
+                    UITimedTriangle.ITimedTriangle.IncomingInfo();
                     Debug.Log("[InputManager] Space bar was clicked");
                     waitforspace = true;
                 }

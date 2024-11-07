@@ -20,11 +20,29 @@ public class DialogManager : MonoBehaviour
 
     private bool dialogAnimPlayed;
     private bool canAdvanceText;
+    private bool bubblesLines;
+    private bool buttonsLines;
+    private bool chillyLines;
+    private bool joeyLines;
+    private bool puddlesLines;
+    private bool stampyLines;
     private int currentDialog;
     private int nextLineDialogArry;
 
     //All Charater Text ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    private string[] charaterNames = { "Biscuit", "Bubbles", "Button", "Chilly", "Cinder", "Clover", "Joey", "Marlow", "Pubbles", "Stapmy" };
+    private string[] charaterNames = { "Biscuit", "Bubbles", "Button", "Chilly", "Cinder", "Joey", "Marlow", "Pubbles", "Stapmy" };
+    private enum CharaterNames
+    {
+        Biscuit,
+        Bubbles,
+        Button,
+        Chilly,
+        Cinder,
+        Joey,
+        Marlow,
+        Puddles,
+        Stampy
+    }
 
     private string[] bubblesDialog =
     {
@@ -131,8 +149,8 @@ public class DialogManager : MonoBehaviour
     private string[] puddlesDialog =
     {
          //Order
-         "My family would like one butterfly pea tea with matcha boba, one green tea with tapioca boba, and a lychee drink with popping boba all can have the same amount of regular cream. Please take your time.",
-         "Actually, my kid is a little picky so can you make sure the lychee is perfect and with light cream?",
+         "My family would like one butterfly pea tea with matcha boba, one green tea with tapioca boba, and a lychee drink with popping boba all can have the same amount of regular cream.",
+         "Please take your time... Actually, my kid is a little picky so can you make sure the lychee is perfect and with light cream?",
         //Did it right
         "Oh thank you! This is just what I ordered!",
         //Did it wrong
@@ -174,6 +192,7 @@ public class DialogManager : MonoBehaviour
     {
         ClearDialog();
         CloseDialogBox();
+        currentDialog = 99;
     }
 
     //Logic -------------------------------------------------------------------
@@ -181,7 +200,7 @@ public class DialogManager : MonoBehaviour
     {
         dialogBoxGameObject.DOScale(Vector3.one, 0.1f);
         dialogAnimPlayed = true;
-        
+
     }
     private void CloseDialogBox()
     {
@@ -199,74 +218,6 @@ public class DialogManager : MonoBehaviour
         nameplate.text = charaterNames[i];
     }
 
-    public void ChangeTextBoxDialog(int correctArry, int dialog)
-    {
-        if(!dialogAnimPlayed)
-        {
-            OpenDialogBox();
-        }
-        ClearDialog();
-        advanceTextButton.SetActive(false);
-        switch (correctArry)
-        {
-            //Bubbles
-            case 0:
-                //turn off advance arrow
-                SwitchNamePlate(1);
-                StartCoroutine(TypeLine(bubblesDialog[dialog]));
-                currentDialog = 1;
-                break;
-            //Biscuit
-            case 1:
-                SwitchNamePlate(0);
-                StartCoroutine(TypeLine(biscuitDialog[dialog]));
-                currentDialog = 2;
-                break;
-            //Button
-            case 2:
-                SwitchNamePlate(3);
-                StartCoroutine(TypeLine(buttonDialog[dialog]));
-                currentDialog = 3;
-                break;
-            //Cinder
-            case 3:
-                SwitchNamePlate(4);
-                StartCoroutine(TypeLine(cinderDialog[dialog]));
-                currentDialog = 4;
-                break;
-            //Chilly
-            case 4:
-                SwitchNamePlate(5);
-                StartCoroutine(TypeLine(chillyDialog[dialog]));
-                currentDialog = 5;
-                break;
-            //Joey
-            case 5:
-                SwitchNamePlate(6);
-                StartCoroutine(TypeLine(joeyDialog[dialog]));
-                currentDialog = 6;
-                break;
-            //Marlow
-            case 6:
-                SwitchNamePlate(7);
-                StartCoroutine(TypeLine(marlowDialog[dialog]));
-                currentDialog = 7;
-                break;
-            //Puddles
-            case 7:
-                SwitchNamePlate(8);
-                StartCoroutine(TypeLine(puddlesDialog[dialog]));
-                currentDialog = 8;
-                break;
-            //Stampy
-            case 8:
-                SwitchNamePlate(9);
-                StartCoroutine(TypeLine(stampyDialog[dialog]));
-                currentDialog = 9;
-                break;
-        }
-    }
-
     private IEnumerator TypeLine(string s)
     {
         foreach (char c in s.ToCharArray())
@@ -277,44 +228,229 @@ public class DialogManager : MonoBehaviour
         advanceTextButton.SetActive(true);
         canAdvanceText = true;
     }
-     
+
     public void IncomingInfo()
     {
-        if(canAdvanceText)
+        //comes from input manager
+        if (canAdvanceText)
         {
             canAdvanceText = false;
             TextBoxUpdate();
         }
     }
+
     private int IncermentNumber()
     {
         nextLineDialogArry++;
         return nextLineDialogArry;
     }
 
+    private void CleanUpTextBox()
+    {
+        nextLineDialogArry = 0;
+        currentDialog = 99;
+        ClearDialog();
+        CloseDialogBox();
+        //Send command back to game manager
+    }
+
+    private int BubbleAskOrder()
+    {
+        int numberReturn;
+        numberReturn = Random.Range(10, 14);
+        return numberReturn;
+    }
+    private int BubbleReturnOrder()
+    {
+        int numberReturn;
+        numberReturn = Random.Range(14, 17);
+        return numberReturn;
+    }
+
+    //Dialog Box ------------------------------------------------------------
+    public void ChangeTextBoxDialog(int correctArry, int dialog)
+    {
+
+        if (!dialogAnimPlayed)
+        {
+            OpenDialogBox();
+        }
+        ClearDialog();
+        advanceTextButton.SetActive(false);
+        switch (correctArry)
+        {
+            //Bubbles
+            case 0:
+                //turn off advance arrow
+                SwitchNamePlate((int)CharaterNames.Bubbles);
+                StartCoroutine(TypeLine(bubblesDialog[dialog]));
+                if (!bubblesLines)
+                {
+                    currentDialog = 0;
+                }
+                break;
+            //Biscuit
+            case 1:
+                SwitchNamePlate((int)CharaterNames.Biscuit);
+                StartCoroutine(TypeLine(biscuitDialog[dialog]));
+                break;
+            //Button
+            case 2:
+                SwitchNamePlate((int)CharaterNames.Button);
+                StartCoroutine(TypeLine(buttonDialog[dialog]));
+                if (!buttonsLines)
+                {
+                    currentDialog = 2;
+                }
+
+                break;
+            //Cinder
+            case 3:
+                SwitchNamePlate((int)CharaterNames.Cinder);
+                StartCoroutine(TypeLine(cinderDialog[dialog]));
+                break;
+            //Chilly
+            case 4:
+                SwitchNamePlate((int)CharaterNames.Chilly);
+                StartCoroutine(TypeLine(chillyDialog[dialog]));
+                if (!chillyLines)
+                {
+                    currentDialog = 4;
+                }
+                break;
+            //Joey
+            case 5:
+                SwitchNamePlate((int)CharaterNames.Joey);
+                StartCoroutine(TypeLine(joeyDialog[dialog]));
+                if (!joeyLines)
+                {
+                    currentDialog = 5;
+                }
+                break;
+            //Marlow
+            case 6:
+                SwitchNamePlate((int)CharaterNames.Marlow);
+                StartCoroutine(TypeLine(marlowDialog[dialog]));
+                break;
+            //Puddles
+            case 7:
+                SwitchNamePlate((int)CharaterNames.Puddles);
+                StartCoroutine(TypeLine(puddlesDialog[dialog]));
+                if (!puddlesLines)
+                {
+                    currentDialog = 7;
+                }
+                break;
+            //Stampy
+            case 8:
+                SwitchNamePlate((int)CharaterNames.Stampy);
+                StartCoroutine(TypeLine(stampyDialog[dialog]));
+                if (!stampyLines)
+                {
+                    currentDialog = 8;
+                }
+                break;
+            case 9:
+                SwitchNamePlate((int)CharaterNames.Bubbles);
+                StartCoroutine(TypeLine(bubblesDialog[BubbleAskOrder()]));
+                break;
+            case 10:
+                SwitchNamePlate((int)CharaterNames.Bubbles);
+                StartCoroutine(TypeLine(bubblesDialog[BubbleReturnOrder()]));
+                break;
+            default:
+                Debug.LogWarning("[Dialog Manager] ChangeTextBoxDialog: default case happend. (what the heck happened)");
+                CleanUpTextBox();
+                break;
+        }
+    }
+
     private void TextBoxUpdate()
     {
-        switch(currentDialog)
+        switch (currentDialog)
         {
             case 0:
-                ClearDialog();
-                CloseDialogBox();
-                break;
-            case 1:
-                //Bubbles opening 
-                if(nextLineDialogArry < 2)
+
+                //Bubbles opening
+                if (nextLineDialogArry < 2)
                 {
                     ChangeTextBoxDialog(0, IncermentNumber());
                 }
                 else
                 {
-                    currentDialog = 0;
-                    nextLineDialogArry = 0;
+                    currentDialog = 99;
                     TextBoxUpdate();
+                    bubblesLines = true;
                 }
                 break;
             case 2:
+                //Button
+                if (nextLineDialogArry < 1)
+                {
+                    ChangeTextBoxDialog(2, IncermentNumber());
+                }
+                else
+                {
+                    currentDialog = 99;
+                    TextBoxUpdate();
+                    buttonsLines = true;
+                }
+                break;
+            case 4:
+                //Chilly
+                if (nextLineDialogArry < 2)
+                {
+                    ChangeTextBoxDialog(4, IncermentNumber());
+                }
+                else
+                {
+                    currentDialog = 99;
+                    TextBoxUpdate();
+                    chillyLines = true;
+                }
+                break;
+            case 5:
+                //Joey
+                if (nextLineDialogArry < 1)
+                {
+                    ChangeTextBoxDialog(5, IncermentNumber());
+                }
+                else
+                {
+                    currentDialog = 99;
+                    TextBoxUpdate();
+                    joeyLines = true;
+                }
+                break;
+            case 7:
+                //puddles
+                if (nextLineDialogArry < 1)
+                {
+                    ChangeTextBoxDialog(7, IncermentNumber());
+                }
+                else
+                {
+                    currentDialog = 99;
+                    TextBoxUpdate();
+                    puddlesLines = true;
 
+                }
+                break;
+            case 8:
+                //stampy
+                if (nextLineDialogArry < 1)
+                {
+                    ChangeTextBoxDialog(8, IncermentNumber());
+                }
+                else
+                {
+                    currentDialog = 99;
+                    TextBoxUpdate();
+                    stampyLines = true;
+                }
+                break;
+            default:
+                CleanUpTextBox();
                 break;
         }
     }

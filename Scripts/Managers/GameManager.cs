@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     private bool canBePaused;                            //Are we in a cut scene?
     private bool cashReisgterSceneLoaded;                //Check to see what scene is loaded drink staion or cash register.
     private bool dialogSceneLoaded;                      //Check to see what scene is loaded
+    private bool textBoxIsFinish;
 
     public string[] madIhaveToDoItThisWay;
 
